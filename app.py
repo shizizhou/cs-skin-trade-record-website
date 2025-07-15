@@ -5,8 +5,11 @@ from model import Trade
 from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
+from init_db import init_database, import_csv
 
 app = flask.Flask(__name__)
+init_database()
+import_csv()
 
 def get_all_trades():
     db: Session = SessionLocal()
