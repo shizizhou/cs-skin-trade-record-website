@@ -6,6 +6,7 @@ from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
 from init_db import init_database, import_csv
+import os
 
 app = flask.Flask(__name__)
 init_database()
@@ -112,4 +113,5 @@ def loss():
     return render_template("loss.html", trades=trades, total_loss=total_loss)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
