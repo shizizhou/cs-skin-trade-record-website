@@ -77,7 +77,7 @@ def add_trade_route():
         total_income = trades[-1].total_income
     else:
         total_income = 0
-
+    total_income = round(total_income + net_income, 2)
     trade = {
         "name": request.form["name"],
         "float": request.form["float"],
@@ -85,7 +85,7 @@ def add_trade_route():
         "sell price": sell_price,
         "gross income": gross_income,
         "net income": net_income,
-        "total income": total_income + net_income
+        "total income": total_income
     }
 
     add_trade(trade)
