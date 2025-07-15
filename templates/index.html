@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>交易管理系统</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 800px;
+        margin: auto;
+        padding: 2rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 0.5rem;
+        text-align: left;
+      }
+      form {
+        margin-top: 1rem;
+      }
+      input[type="text"] {
+        padding: 0.5rem;
+        width: 200px;
+        margin-right: 1rem;
+      }
+      button {
+        padding: 0.5rem 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>交易信息管理系统</h1>
+    <a href="/add_trade" style="margin-bottom: 1rem; display: inline-block"
+      >添加交易</a
+    >
+    <a href="/profit" style="margin-bottom: 1rem; display: inline-block"
+      >查看盈利交易</a
+    >
+    <a href="/loss" style="margin-bottom: 1rem; display: inline-block"
+      >查看亏损交易</a
+    >
+    <h2>交易列表</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>float</th>
+          <th>purchase price</th>
+          <th>sell price</th>
+          <th>gross income</th>
+          <th>net income</th>
+          <th>total income</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for trade in trades %}
+        <tr>
+          <td>{{ trade.name }}</td>
+          <td>{{ trade.float_value }}</td>
+          <td>{{ trade.purchase_price }}</td>
+          <td>{{ trade.sell_price }}</td>
+          <td>{{ trade.gross_income }}</td>
+          <td>{{ trade.net_income }}</td>
+          <td>{{ trade.total_income }}</td>
+          <td>
+            <form
+              method="POST"
+              action="/delete_trade"
+              onsubmit="return confirm('确定删除这条交易吗？');"
+            >
+              <input type="hidden" name="name" value="{{ trade.name }}" />
+              <input
+                type="hidden"
+                name="purchase_price"
+                value="{{ trade.purchase_price }}"
+              />
+              <input
+                type="hidden"
+                name="sell_price"
+                value="{{ trade.sell_price }}"
+              />
+              <button type="submit">删除</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

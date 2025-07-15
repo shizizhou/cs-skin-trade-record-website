@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>亏损交易</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 2rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+        a { display: inline-block; margin-top: 1rem; text-decoration: none; color: blue; }
+    </style>
+</head>
+<body>
+    <h1>亏损交易列表</h1>
+    <a href="/">返回主页</a>
+    <h2>总亏损</h2>
+    <p>{{ total_loss }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>name</th>
+                <th>float</th>
+                <th>purchase price</th>
+                <th>sell price</th>
+                <th>gross income</th>
+                <th>net income</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trade in trades %}
+            <tr>
+                <td>{{ trade.name }}</td>
+                <td>{{ trade.float_value }}</td>
+                <td>{{ trade.purchase_price }}</td>
+                <td>{{ trade.sell_price }}</td>
+                <td>{{ trade.gross_income }}</td>
+                <td>{{ trade.net_income }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
