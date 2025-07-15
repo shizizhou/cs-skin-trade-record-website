@@ -1,75 +1,196 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <title>交易管理系统</title>
+    <title>CS 交易管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      body {
-        font-family: sans-serif;
-        max-width: 800px;
-        margin: auto;
-        padding: 2rem;
+      * {
+        box-sizing: border-box;
       }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        color: #333;
+        margin: 0;
+        padding: 2rem;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      h1,
+      h2 {
+        text-align: center;
+      }
+
+      nav {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      nav a {
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+      }
+
+      nav a:hover {
+        background-color: #0056b3;
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 1rem;
+        background-color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       }
+
       th,
       td {
-        border: 1px solid #ccc;
-        padding: 0.5rem;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
         text-align: left;
       }
+
+      th {
+        background-color: #f5f5f5;
+      }
+
+      tr:nth-child(even) {
+        background-color: #fafafa;
+      }
+
       form {
-        margin-top: 1rem;
+        margin: 0;
       }
-      input[type="text"] {
-        padding: 0.5rem;
-        width: 200px;
-        margin-right: 1rem;
-      }
+
       button {
-        padding: 0.5rem 1rem;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.2s;
+      }
+
+      button:hover {
+        background-color: #c82333;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+
+        thead {
+          display: none;
+        }
+
+        tr {
+          margin-bottom: 1rem;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          overflow: hidden;
+        }
+
+        td {
+          padding: 0.5rem;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        td::before {
+          content: attr(data-label);
+          font-weight: bold;
+          flex-basis: 50%;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>交易信息管理系统</h1>
-    <a href="/add_trade" style="margin-bottom: 1rem; display: inline-block"
-      >添加交易</a
-    >
-    <a href="/profit" style="margin-bottom: 1rem; display: inline-block"
-      >查看盈利交易</a
-    >
-    <a href="/loss" style="margin-bottom: 1rem; display: inline-block"
-      >查看亏损交易</a
-    >
-    <h2>交易列表</h2>
-    <table>
+    <h1>CS 交易管理系统</h1>
+
+    <nav>
+      <a href="/add_trade">添加交易</a>
+      <a href="/profit">查看盈利交易</a>
+      <a href="/loss">查看亏损交易</a>
+    </nav>
+
+    <h2>交易总览</h2>
+    <table style="width: 100%; table-layout: fixed;">
       <thead>
         <tr>
-          <th>name</th>
-          <th>float</th>
-          <th>purchase price</th>
-          <th>sell price</th>
-          <th>gross income</th>
-          <th>net income</th>
-          <th>total income</th>
+          <th>总交易数</th>
+          <th>总买入价</th>
+          <th>总卖出价</th>
+          <th>总收益</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ total_trades }}</td>
+          <td>{{ total_purchase_price }}</td>
+          <td>{{ total_sell_price }}</td>
+          <td>{{ total_income }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>交易列表</h2>
+    <table style="width: 100%; table-layout: fixed;">
+      <colgroup>
+    <col style="width: 22%;">
+    <col style="width: 11%;">
+    <col style="width: 11%;">
+    <col style="width: 11%;">
+    <col style="width: 11%;">
+    <col style="width: 11%;">
+    <col style="width: 11%;">
+    <col style="width: 11%;">
+  </colgroup>
+      <thead>
+        <tr>
+          <th>名称</th>
+          <th>Float</th>
+          <th>买入价</th>
+          <th>卖出价</th>
+          <th>毛利润</th>
+          <th>净利润</th>
+          <th>总收益</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody>
         {% for trade in trades %}
         <tr>
-          <td>{{ trade.name }}</td>
-          <td>{{ trade.float_value }}</td>
-          <td>{{ trade.purchase_price }}</td>
-          <td>{{ trade.sell_price }}</td>
-          <td>{{ trade.gross_income }}</td>
-          <td>{{ trade.net_income }}</td>
-          <td>{{ trade.total_income }}</td>
-          <td>
+          <td data-label="名称">{{ trade.name }}</td>
+          <td data-label="Float">{{ trade.float_value }}</td>
+          <td data-label="买入价">{{ trade.purchase_price }}</td>
+          <td data-label="卖出价">{{ trade.sell_price }}</td>
+          <td data-label="毛利润">{{ trade.gross_income }}</td>
+          <td data-label="净利润">{{ trade.net_income }}</td>
+          <td data-label="总收益">{{ trade.total_income }}</td>
+          <td data-label="操作">
             <form
               method="POST"
               action="/delete_trade"

@@ -48,7 +48,11 @@ def delete_trade_by_info(name, purchase_price, sell_price):
 @app.route("/")
 def index():
     trades = get_all_trades()
-    return render_template("index.html", trades=trades)
+    total_trades = len(trades)
+    total_income = trades[-1].total_income if trades else 0
+    total_purchase_price = sum(trade.purchase_price for trade in trades)
+    total_sell_price = sum(trade.sell_price for trade in trades)
+    return render_template("index.html", trades=trades, total_trades=total_trades, total_income=total_income, total_purchase_price=total_purchase_price, total_sell_price=total_sell_price)
 
 @app.route("/add_trade", methods=["GET"])
 def add_trade_form():
@@ -67,7 +71,7 @@ def add_trade_route():
         net_income = sell_price * 0.99 - purchase_price
     else:
         net_income = sell_price * 0.98 - purchase_price
-
+    net_income = round(net_income, 2)
     trades = get_all_trades()
     if trades:
         total_income = trades[-1].total_income
