@@ -1,4 +1,4 @@
-﻿物品名称,磨损,购买价格,出售价格,到手收入,净收入,净收入
+﻿name,float,pruchase price,sell price,gross income,net income,total income
 c5提现,,,,,-367,-367
 buff提现,,,,,-19,-386
 悠悠提现,,,,,-2571,-2957
