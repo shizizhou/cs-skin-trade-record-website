@@ -1,3 +1,5 @@
+import csv
+import io
 import flask
 from flask import request, render_template, redirect, url_for
 from database import SessionLocal, engine
@@ -115,6 +117,49 @@ def loss():
     total_loss = sum(trade.net_income for trade in trades)
     db.close()
     return render_template("loss.html", trades=trades, total_loss=total_loss)
+
+@app.route("/search", methods=["GET"])
+def search():
+    q = request.args.get('q', '').strip()
+    trades = []
+
+    if q:
+        session = SessionLocal()
+        trades = session.query(Trade)\
+            .filter(Trade.name.ilike(f"%{q}%"))\
+            .order_by(desc(Trade.id))\
+            .all()
+        session.close()
+    count = len(trades)
+    return render_template('search.html', trades=trades, q=q, count=count)
+
+
+@app.route("/export")
+def export():
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow([
+        'name', 'float', 'purchase price', 'sell price',
+        'gross income', 'net income', 'total income'
+    ])
+
+    trades = get_all_trades()
+
+    for t in trades:
+        writer.writerow([
+            t.name,
+            t.float_value,
+            t.purchase_price,
+            t.sell_price,
+            t.gross_income,
+            t.net_income,
+            t.total_income
+        ])
+
+    response = flask.Response(output.getvalue(), mimetype='text/csv')
+    response.headers['Content-Disposition'] = 'attachment; filename=trades_export.csv'
+    return response
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
