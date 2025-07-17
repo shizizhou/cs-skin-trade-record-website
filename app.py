@@ -1,7 +1,8 @@
 import csv
 import io
+import time
 import flask
-from flask import request, render_template, redirect, url_for
+from flask import request, render_template, redirect, url_for,abort
 from database import SessionLocal, engine
 from model import Trade, User
 from sqlalchemy import desc
@@ -10,6 +11,7 @@ from init_db import init_database
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import os
 
+ip_register_time = {}
 
 #初始化数据库
 app = flask.Flask(__name__)
@@ -30,6 +32,13 @@ def load_user(user_id):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    ip = request.remote_addr
+    now = time.time()
+    last_time = ip_register_time.get(ip, 0)
+    if now - last_time < 60:
+        abort(429, "注册太频繁，请稍后再试")
+    ip_register_time[ip] = now
+    
     if request.method == 'POST':
         session = SessionLocal()
         username = request.form['username']
