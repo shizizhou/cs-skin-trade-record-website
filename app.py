@@ -13,6 +13,7 @@ import os
 
 #初始化数据库
 app = flask.Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 
 app.secret_key = 'aabbccddeeffgghh'
 init_database()
 
