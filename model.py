@@ -17,6 +17,16 @@ class Trade(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="trades")
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "float_value": self.float_value,
+            "purchase_price": self.purchase_price,
+            "sell_price": self.sell_price,
+            "gross_income": self.gross_income,
+            "net_income": self.net_income,
+        }
+
 
 class User(Base, UserMixin):
     __tablename__ = 'users'
