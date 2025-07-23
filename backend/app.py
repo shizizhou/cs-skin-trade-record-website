@@ -129,12 +129,30 @@ def index():
     total_purchase_price = sum(trade.purchase_price for trade in trades)
     total_sell_price = sum(trade.sell_price for trade in trades)
     trades = [trade.to_dict() for trade in trades]
+    total_income_list = [0]
+    for i in range(len(trades)):
+        total_income_list.append(total_income_list[i] + trades[i]["net_income"])
+
+    total_trade_type =[0,0,0,0]
+    for trade in trades:
+        if "刀" in trade['name'] or '尼泊尔' in trade['name']:
+            total_trade_type[0] += trade['sell_price']
+        elif "手套" in trade['name'] or '裹手' in trade['name']:
+            total_trade_type[1] += trade['sell_price']
+        elif "-" in trade['name']:
+            total_trade_type[2] += trade['sell_price']
+        else:
+            total_trade_type[3] += trade['sell_price']
+    
+
     return jsonify({
         "trades": trades,
         "total_trades": total_trades,
         "total_income": total_income,
         "total_purchase_price": total_purchase_price,
-        "total_sell_price": total_sell_price
+        "total_sell_price": total_sell_price,
+        "total_income_list": total_income_list,
+        "total_trade_type": total_trade_type
     })
 
 
